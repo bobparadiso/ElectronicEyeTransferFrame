@@ -1,5 +1,4 @@
 #include <Keypad.h>
-
 #include <Wire.h> 
 
 #define DISPLAY_WIDTH 20
@@ -12,35 +11,22 @@
 LiquidCrystal_I2C lcd1(0x27, 2, 1, 0, 4, 5, 6, 7, BACKLIGHT_PIN, POSITIVE);
 LiquidCrystal_I2C lcd2(0x26, 2, 1, 0, 4, 5, 6, 7, BACKLIGHT_PIN, POSITIVE);
 
-// Creat a set of new characters
-const uint8_t charBitmap[][8] = {
-   //{ 0xc, 0x12, 0x12, 0xc, 0, 0, 0, 0 },
-   { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1F },
-   { 0x6, 0x9, 0x9, 0x6, 0, 0, 0, 0 },
-   { 0x0, 0x6, 0x9, 0x9, 0x6, 0, 0, 0x0 },
-   { 0x0, 0xc, 0x12, 0x12, 0xc, 0, 0, 0x0 },
-   { 0x0, 0x0, 0xc, 0x12, 0x12, 0xc, 0, 0x0 },
-   { 0x0, 0x0, 0x6, 0x9, 0x9, 0x6, 0, 0x0 },
-   { 0x0, 0x0, 0x0, 0x6, 0x9, 0x9, 0x6, 0x0 },
-   { 0x0, 0x0, 0x0, 0xc, 0x12, 0x12, 0xc, 0x0 }
-   
-};
-
-const byte ROWS = 4; //four rows
-const byte COLS = 3; //three columns
+#define ROWS 4 //four rows
+#define COLS 3 //three columns
 
 char keys[ROWS][COLS] = {
-  {'1','2','3'},
-  {'4','5','6'},
-  {'7','8','9'},
-  {'*','0','#'}
+	{'1','2','3'},
+	{'4','5','6'},
+	{'7','8','9'},
+	{'*','0','#'}
 };
 
+//IDs that will be returned on a key press
 char keysID[ROWS][COLS] = {
-  {1,2,3},
-  {7,8,9},
-  {4,5,6},
-  {10,11,12}
+	{1,2,3},
+	{7,8,9},
+	{4,5,6},
+	{10,11,12}
 };
 
 byte rowPins[ROWS] = {5, 6, 7, 8}; //connect to the row pinouts of the keypad
@@ -48,6 +34,7 @@ byte colPins[COLS] = {2, 3, 4}; //connect to the column pinouts of the keypad
 
 Keypad keypad = Keypad( makeKeymap(keysID), rowPins, colPins, ROWS, COLS );
 
+//mapping of 2 key presses to a letter
 char letterMapping[6][6] = {
 	{'I','H','G','L','K','J'},
 	{'2','1','0','5','4','3'},
@@ -70,7 +57,7 @@ void setLED(uint8_t key)
 		digitalWrite(LED_PINS[key - 1], HIGH);
 }
 
-//
+//loads a full buffer of text onto the display
 void setText(LiquidCrystal_I2C *lcd, char *text, uint8_t cursorPos)
 {
 	char tmpBuf[DISPLAY_WIDTH + 1];
@@ -100,12 +87,12 @@ void setText(LiquidCrystal_I2C *lcd, char *text, uint8_t cursorPos)
 //
 void setup()
 {
-	uint8_t x1, y1, x2, y2;
 	Serial.begin(9600);
 
 	for (int i = 0; i < NUM_LEDS; i++)
 		pinMode(LED_PINS[i], OUTPUT);
 
+	//show LED test
 	for (int i = 0; i < NUM_LEDS; i++)
 	{
 		setLED(1 + i);
@@ -113,20 +100,12 @@ void setup()
 	}
 	setLED(0);
 
-	int charBitmapSize = (sizeof(charBitmap ) / sizeof (charBitmap[0]));
-
 	// Switch on the backlight
-	pinMode ( BACKLIGHT_PIN, OUTPUT );
-	digitalWrite ( BACKLIGHT_PIN, HIGH );
+	pinMode(BACKLIGHT_PIN, OUTPUT);
+	digitalWrite(BACKLIGHT_PIN, HIGH);
 
 	lcd1.begin(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 	lcd2.begin(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-
-	for ( int i = 0; i < charBitmapSize; i++ )
-	{
-		lcd1.createChar ( i, (uint8_t *)charBitmap[i] );
-		lcd2.createChar ( i, (uint8_t *)charBitmap[i] );
-	}
 
 	//show display test
 	char buf[DISPLAY_LEN + 1];
