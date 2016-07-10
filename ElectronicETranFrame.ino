@@ -113,20 +113,20 @@ void setup()
 	}
 	setLED(0);
 
-   int charBitmapSize = (sizeof(charBitmap ) / sizeof (charBitmap[0]));
+	int charBitmapSize = (sizeof(charBitmap ) / sizeof (charBitmap[0]));
 
-  // Switch on the backlight
-  pinMode ( BACKLIGHT_PIN, OUTPUT );
-  digitalWrite ( BACKLIGHT_PIN, HIGH );
-  
-  lcd1.begin(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-  lcd2.begin(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-  
-   for ( int i = 0; i < charBitmapSize; i++ )
-   {
-      lcd1.createChar ( i, (uint8_t *)charBitmap[i] );
-      lcd2.createChar ( i, (uint8_t *)charBitmap[i] );
-   }
+	// Switch on the backlight
+	pinMode ( BACKLIGHT_PIN, OUTPUT );
+	digitalWrite ( BACKLIGHT_PIN, HIGH );
+
+	lcd1.begin(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	lcd2.begin(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+
+	for ( int i = 0; i < charBitmapSize; i++ )
+	{
+		lcd1.createChar ( i, (uint8_t *)charBitmap[i] );
+		lcd2.createChar ( i, (uint8_t *)charBitmap[i] );
+	}
 
 	//show display test
 	char buf[DISPLAY_LEN + 1];
